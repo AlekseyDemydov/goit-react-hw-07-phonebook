@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
+
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { addContact } from '../../redux/contacts/contactsActions';
+import { getContact } from 'redux/contacts/contactsSelector';
+import { addContact } from '../../redux/contacts/contactsOperation';
 import s from './Form.module.css';
 
 const Form = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-  const items = useSelector(state => state.contacts.items);
+  const [phone, setNumber] = useState('');
+  const items = useSelector(getContact);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -18,7 +19,7 @@ const Form = () => {
       case 'name':
         setName(value);
         break;
-      case 'number':
+      case 'phone':
         setNumber(value);
         break;
       default:
@@ -43,7 +44,7 @@ const Form = () => {
       });
       return;
     }
-    const newContact = { id: nanoid(), name, number };
+    const newContact = { name, phone };
     dispatch(addContact(newContact));
     reset();
   };
@@ -68,9 +69,9 @@ const Form = () => {
         <input
           className={s.input}
           type="tel"
-          value={number}
+          value={phone}
           onChange={handleChange}
-          name="number"
+          name="phone"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required

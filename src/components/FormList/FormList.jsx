@@ -1,22 +1,32 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteContact } from '../../redux/contacts/contactsActions';
+import { useEffect } from 'react';
+
+import { getFilterContact } from 'redux/contacts/contactsSelector';
+import {
+  deleteContact,
+  getContact,
+} from '../../redux/contacts/contactsOperation';
 import s from './FormList.module.css';
 
 const FormList = () => {
-  const items = useSelector(state => state.contacts.items);
-  const filter = useSelector(state => state.contacts.filter);
+  const items = useSelector(getFilterContact);
+  // const filter = useSelector(state => state.contacts.filter);
   const dispatch = useDispatch();
 
-  const filteredContacts = items.filter(el =>
-    el.name.toLowerCase().includes(filter.toLowerCase())
-  );
+  // const filteredContacts = items.filter(el =>
+  //   el.name.toLowerCase().includes(filter.toLowerCase())
+  // );
+
+  useEffect(() => {
+    dispatch(getContact());
+  }, [dispatch]);
 
   return (
     <ul className={s.contact}>
-      {filteredContacts.map(el => (
+      {items.map(el => (
         <li key={el.id} className={s.con}>
           <p className={s.conName}>
-            {el.name}: <span>{el.number}</span>
+            {el.name}: <span>{el.phone}</span>
           </p>
           <button
             className={s.btn}
